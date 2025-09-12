@@ -116,6 +116,15 @@ input {
   font-size: 0.9rem;
 }
 
+.version {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.7);
+}
+
 @media (min-width: 600px) {
   input { font-size: 1.1rem; }
   button { font-size: 1.1rem; }

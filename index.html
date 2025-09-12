@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
+<body>
+  <h1>Тренировка слов</h1>
   <meta charset="UTF-8">
   <title>Тренировка слов</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>Тренировка слов</h1>
-
+  
   <div id="trainer">Загрузка...</div>
 
   <div class="card">
@@ -20,15 +16,8 @@
     </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
-
-  <script src="firebase-config.js"></script>
-  <script src="app.js"></script>
-  </body>
-
   <button id="manage-btn" onclick="openModal()">Управлять словами</button>
+
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
@@ -36,5 +25,12 @@
       <div id="word-list"></div>
     </div>
   </div>
-  
-</html>
+
+  <footer class="version">v1.0.3</footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
+</body>
