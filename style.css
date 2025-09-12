@@ -69,7 +69,7 @@ input {
   background: rgba(244, 67, 54, 0.2);
 }
 .modal {
-  display: none; 
+  display: none;
   position: fixed;
   z-index: 1000;
   left: 0;
