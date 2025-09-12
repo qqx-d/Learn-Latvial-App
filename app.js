@@ -56,3 +56,43 @@ function nextWord() {
   i++;
   showWord();
 }
+
+function openModal() {
+  renderWordList();
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+function renderWordList() {
+  const list = document.getElementById('word-list');
+  list.innerHTML = '';
+  const ref = db.ref('users/' + uid + '/words');
+  ref.once('value', snap => {
+    const data = snap.val();
+    if (!data) {
+      list.innerHTML = '<p>Нет слов</p>';
+      return;
+    }
+    Object.entries(data).forEach(([key, item]) => {
+      const div = document.createElement('div');
+      div.className = 'word-item';
+      div.innerHTML = `
+        <input value="${item.word}" onchange="updateWord('${key}', this.value, 'word')">
+        <input value="${item.translation}" onchange="updateWord('${key}', this.value, 'translation')">
+        <button onclick="deleteWord('${key}')">Удалить</button>
+      `;
+      list.appendChild(div);
+    });
+  });
+}
+
+function updateWord(key, value, field) {
+  db.ref('users/' + uid + '/words/' + key + '/' + field).set(value);
+}
+
+function deleteWord(key) {
+  db.ref('users/' + uid + '/words/' + key).remove().then(() => renderWordList());
+}
