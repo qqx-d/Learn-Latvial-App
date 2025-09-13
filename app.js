@@ -8,8 +8,8 @@ let presetLevel = null;
 let presetType = null;
 let usePreset = false;
 let userWordsRef = null;
-let askReverse = false;
 let trainingMode = "both";
+let currentDirection = "ru2lv";
 
 auth.signInAnonymously().then(() => {
   uid = auth.currentUser.uid;
@@ -34,7 +34,7 @@ function getSelectedValue(id) {
 }
 
 function addWord() {
-  if (usePreset) return; // нельзя добавлять в пресеты
+  if (usePreset) return;
   const w = document.getElementById('word').value.trim();
   const t = document.getElementById('translation').value.trim();
   if (!w || !t) return;
@@ -59,33 +59,43 @@ function showWord() {
     askReverse = Math.random() < 0.5;
   }
 
-  if (!askReverse) {
-    document.getElementById('trainer').innerHTML =
-      '<b>' + words[i].word + '</b>' +
-      '<input id="answer" placeholder="' + t("translation") + '">' +
-      '<br><button onclick="checkAnswer()">' + t("check") + '</button>';
-  } else {
-    document.getElementById('trainer').innerHTML =
-      '<b>' + words[i].translation + '</b>' +
-      '<input id="answer" placeholder="' + t("word") + '">' +
-      '<br><button onclick="checkAnswer()">' + t("check") + '</button>';
-  }
+  const wordToShow = !askReverse ? words[i].word : words[i].translation;
+  const placeholder = !askReverse ? t("translation") : t("word");
+
+  document.getElementById('trainer').innerHTML =
+    `<b>${wordToShow}</b>
+     <input id="answer" placeholder="${placeholder}">
+     <br>
+     <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
+        <button id="check-btn" onclick="checkAnswer()">${t("check")}</button>
+        <button id="skip-btn" onclick="skipWord()">${t("skip")}</button>
+     </div>`;
+}
+
+function skipWord() {
+  nextWord();
 }
 
 function checkAnswer() {
   const input = document.getElementById('answer');
-  const userAns = input.value.trim().toLowerCase();
+  const btn = document.getElementById('check-btn');
+  const userAns = cleanWord(input.value);
+
+  const word = words[i].word;
+  const translation = words[i].translation;
 
   let correctAns;
-  if (!askReverse) {
-    correctAns = words[i].translation.trim().toLowerCase();
+  if (currentDirection === "ru2lv") {
+    correctAns = cleanWord(translation);
   } else {
-    correctAns = words[i].word.trim().toLowerCase();
+    correctAns = cleanWord(word);
   }
 
   if (userAns === correctAns) {
     input.classList.remove('wrong');
     input.classList.add('correct');
+
+    btn.disabled = true;
     setTimeout(() => { nextWord(); }, 1000);
   } else {
     input.classList.remove('correct');
@@ -176,12 +186,29 @@ function resetToPersonal() {
 function loadPresetWords() {
   if (!presetLevel || !presetType) return;
 
-  db.ref(`presets/${presetLevel}/${presetType}`).once('value', snap => {
-    const data = snap.val();
-    words = data ? shuffle(Object.values(data)) : [];
-    i = 0;
-    showWord();
-  });
+  if (presetLevel === "randomAll") {
+    db.ref("presets").once("value", snap => {
+      const data = snap.val();
+      let all = [];
+      if (data) {
+        Object.values(data).forEach(levelData => {
+          if (levelData[presetType]) {
+            all = all.concat(Object.values(levelData[presetType]));
+          }
+        });
+      }
+      words = shuffle(all);
+      i = 0;
+      showWord();
+    });
+  } else {
+    db.ref(`presets/${presetLevel}/${presetType}`).once('value', snap => {
+      const data = snap.val();
+      words = data ? shuffle(Object.values(data)) : [];
+      i = 0;
+      showWord();
+    });
+  }
 }
 
 function shuffle(array) {
@@ -229,3 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCustomSelects();
   applyTranslations();
 });
+
+function cleanWord(word) {
+  return word.replace(/\(.*?\)/g, "").trim().toLowerCase();
+}

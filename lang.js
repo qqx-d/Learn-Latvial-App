@@ -20,7 +20,9 @@ const translations = {
     adjectives: "Прилагательные",
     mode_ru2lv: "С русского на латышский",
     mode_lv2ru: "С латышского на русский",
-    mode_both: "Все вместе"
+    mode_both: "Все вместе",
+    randomAll: "Случайные слова",
+    skip: "Пропустить"
   },
   en: {
     title: "Word Trainer",
@@ -43,7 +45,9 @@ const translations = {
     adjectives: "Adjectives",
     mode_ru2lv: "From Russian to Latvian",
     mode_lv2ru: "From Latvian to Russian",
-    mode_both: "Mixed"
+    mode_both: "Mixed",
+    randomAll: "Random words",
+    skip: "Skip"
   },
   lv: {
     title: "Vārdu treniņš",
@@ -66,7 +70,9 @@ const translations = {
     adjectives: "Īpašības vārdi",
     mode_ru2lv: "No krievu uz latviešu",
     mode_lv2ru: "No latviešu uz krievu",
-    mode_both: "Abi kopā"
+    mode_both: "Abi kopā",
+    randomAll: "Nejauši vārdi",
+    skip: "Izlaist"
   }
 };
 
@@ -122,5 +128,17 @@ function applyTranslations() {
   if (selectedMode) {
     const current = selectedMode.getAttribute("data-value");
     if (current) selectedMode.innerText = t("mode_" + current);
+  }
+
+  document.querySelector("#level-select .options [data-value='randomAll']").innerText = t("randomAll");
+
+  const selectedLevel = document.querySelector("#level-select .selected");
+  if (selectedLevel) {
+    const current = selectedLevel.getAttribute("data-value");
+    if (current === "randomAll") {
+      selectedLevel.innerText = t("randomAll");
+    } else {
+      selectedLevel.innerText = current.toUpperCase();
+    }
   }
 }
