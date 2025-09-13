@@ -1,36 +1,80 @@
-<body>
-  <h1>Тренировка слов</h1>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
   <meta charset="UTF-8">
   <title>Тренировка слов</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 id="title"></h1>
 
   <div id="trainer">Загрузка...</div>
 
-  <div class="card">
-    <h3>Добавить слово</h3>
+  <!-- добавление слова -->
+  <div id="add-card" class="card">
+    <h3 id="add-title"></h3>
     <div class="inputs">
-      <input id="word" placeholder="Слово">
-      <input id="translation" placeholder="Перевод">
-      <button onclick="addWord()">Добавить</button>
+      <input id="word" placeholder="">
+      <input id="translation" placeholder="">
+      <button id="add-btn" onclick="addWord()"></button>
     </div>
   </div>
 
-  <button id="manage-btn" onclick="openModal()">Управлять словами</button>
+  <button id="manage-btn" onclick="openModal()"></button>
+  <button id="settings-btn" onclick="openSettings()"></button>
 
+  <!-- управление словами -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
-      <h3>Список слов</h3>
+      <h3 id="list-title"></h3>
       <div id="word-list"></div>
     </div>
   </div>
 
-  <footer class="version">v1.0.4</footer>
+  <!-- настройки -->
+  <div id="settings-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeSettings()">&times;</span>
+      <h3 id="settings-title"></h3>
+
+      <!-- Уровень -->
+      <div class="custom-select" id="level-select">
+        <div class="selected" data-value="a1">A1</div>
+        <div class="options">
+          <div data-value="a1">A1</div>
+          <div data-value="a2">A2</div>
+          <div data-value="b1">B1</div>
+        </div>
+      </div>
+
+      <!-- Тип слов -->
+      <div class="custom-select" id="type-select">
+        <div class="selected" data-value="nouns">Существительные</div>
+        <div class="options">
+          <div data-value="nouns">Существительные</div>
+          <div data-value="verbs">Глаголы</div>
+          <div data-value="adjectives">Прилагательные</div>
+        </div>
+      </div>
+
+      <br><br>
+      <div class="settings-buttons">
+        <button id="apply-btn" onclick="applySettings()"></button>
+        <button id="reset-btn" onclick="resetToPersonal()"></button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="version">v1.2.1</footer>
+  <button id="lang-btn" class="lang-btn" onclick="toggleLang()">RU</button>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
   <script src="firebase-config.js"></script>
+  <script src="lang.js"></script>
   <script src="app.js"></script>
 </body>
+</html>

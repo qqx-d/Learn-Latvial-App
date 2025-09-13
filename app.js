@@ -4,19 +4,35 @@ let uid = null;
 let words = [];
 let i = 0;
 
+let presetLevel = null;
+let presetType = null;
+let usePreset = false;
+let userWordsRef = null;
+
 auth.signInAnonymously().then(() => {
   uid = auth.currentUser.uid;
   listenWords();
 });
 
 function listenWords() {
-  db.ref('users/' + uid + '/words').on('value', snapshot => {
+  if (usePreset) return;
+  if (userWordsRef) userWordsRef.off();
+
+  userWordsRef = db.ref('users/' + uid + '/words');
+  userWordsRef.on('value', snapshot => {
     words = snapshot.val() ? Object.values(snapshot.val()) : [];
+    i = 0;
     showWord();
   });
 }
 
+function getSelectedValue(id) {
+  const el = document.querySelector(`#${id} .selected`);
+  return el ? el.getAttribute('data-value') : null;
+}
+
 function addWord() {
+  if (usePreset) return; // нельзя добавлять в пресеты
   const w = document.getElementById('word').value.trim();
   const t = document.getElementById('translation').value.trim();
   if (!w || !t) return;
@@ -28,14 +44,14 @@ function addWord() {
 
 function showWord() {
   if (words.length === 0) {
-    document.getElementById('trainer').innerHTML = 'Нет слов. Добавьте новые ниже.';
+    document.getElementById('trainer').innerHTML = t("noWords");
     return;
   }
   if (i >= words.length) i = 0;
   document.getElementById('trainer').innerHTML =
     '<b>' + words[i].word + '</b>' +
-    '<input id="answer" placeholder="Введите перевод">' +
-    '<br><button onclick="checkAnswer()">Проверить</button>';
+    '<input id="answer" placeholder="' + t("translation") + '">' +
+    '<br><button onclick="checkAnswer()">' + t("check") + '</button>';
 }
 
 function checkAnswer() {
@@ -57,15 +73,14 @@ function nextWord() {
   showWord();
 }
 
+// ---------- Управление словами ----------
 function openModal() {
   renderWordList();
   document.getElementById('modal').style.display = 'flex';
 }
-
 function closeModal() {
   document.getElementById('modal').style.display = 'none';
 }
-
 function renderWordList() {
   const list = document.getElementById('word-list');
   list.innerHTML = '';
@@ -88,11 +103,98 @@ function renderWordList() {
     });
   });
 }
-
 function updateWord(key, value, field) {
   db.ref('users/' + uid + '/words/' + key + '/' + field).set(value);
 }
-
 function deleteWord(key) {
   db.ref('users/' + uid + '/words/' + key).remove().then(() => renderWordList());
 }
+
+// ---------- Настройки ----------
+function openSettings() {
+  document.getElementById('settings-modal').style.display = 'flex';
+}
+function closeSettings() {
+  document.getElementById('settings-modal').style.display = 'none';
+}
+
+function applySettings() {
+  const lvl = getSelectedValue('level-select');
+  const typ = getSelectedValue('type-select');
+  if (!lvl || !typ) return;
+
+  presetLevel = lvl;
+  presetType  = typ;
+  usePreset   = true;
+
+  if (userWordsRef) userWordsRef.off();
+
+  document.getElementById('manage-btn').style.display = 'none';
+  document.getElementById('add-card').style.display   = 'none';
+
+  document.getElementById('trainer').innerText = t('trainer');
+  closeSettings();
+  loadPresetWords();
+}
+
+function resetToPersonal() {
+  usePreset = false;
+
+  document.getElementById('manage-btn').style.display = 'inline-block';
+  document.getElementById('add-card').style.display   = 'block';
+
+  document.getElementById('trainer').innerText = t('trainer');
+  listenWords();
+}
+
+function loadPresetWords() {
+  if (!presetLevel || !presetType) return;
+
+  db.ref(`presets/${presetLevel}/${presetType}`).once('value', snap => {
+    const data = snap.val();
+    words = data ? Object.values(data) : [];
+    i = 0;
+    showWord();
+  });
+}
+
+function initCustomSelects() {
+  document.querySelectorAll(".custom-select").forEach(select => {
+    const selected = select.querySelector(".selected");
+    const options = select.querySelector(".options");
+
+    selected.addEventListener("click", () => {
+      document.querySelectorAll(".custom-select").forEach(s => {
+        if (s !== select) {
+          s.classList.remove("open");
+          s.querySelector(".options").style.display = "none";
+        }
+      });
+      select.classList.toggle("open");
+      options.style.display = select.classList.contains("open") ? "block" : "none";
+    });
+
+    options.querySelectorAll("div").forEach(opt => {
+      opt.addEventListener("click", () => {
+        selected.innerText = opt.innerText;
+        selected.setAttribute("data-value", opt.getAttribute("data-value"));
+        options.style.display = "none";
+        select.classList.remove("open");
+      });
+    });
+  });
+
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".custom-select")) {
+      document.querySelectorAll(".custom-select").forEach(select => {
+        select.classList.remove("open");
+        select.querySelector(".options").style.display = "none";
+      });
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initCustomSelects();
+  applyTranslations();
+});
