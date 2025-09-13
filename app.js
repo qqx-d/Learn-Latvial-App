@@ -8,6 +8,8 @@ let presetLevel = null;
 let presetType = null;
 let usePreset = false;
 let userWordsRef = null;
+let askReverse = false;
+let trainingMode = "both";
 
 auth.signInAnonymously().then(() => {
   uid = auth.currentUser.uid;
@@ -48,16 +50,39 @@ function showWord() {
     return;
   }
   if (i >= words.length) i = 0;
-  document.getElementById('trainer').innerHTML =
-    '<b>' + words[i].word + '</b>' +
-    '<input id="answer" placeholder="' + t("translation") + '">' +
-    '<br><button onclick="checkAnswer()">' + t("check") + '</button>';
+
+  if (trainingMode === "ru2lv") {
+    askReverse = false;
+  } else if (trainingMode === "lv2ru") {
+    askReverse = true;
+  } else {
+    askReverse = Math.random() < 0.5;
+  }
+
+  if (!askReverse) {
+    document.getElementById('trainer').innerHTML =
+      '<b>' + words[i].word + '</b>' +
+      '<input id="answer" placeholder="' + t("translation") + '">' +
+      '<br><button onclick="checkAnswer()">' + t("check") + '</button>';
+  } else {
+    document.getElementById('trainer').innerHTML =
+      '<b>' + words[i].translation + '</b>' +
+      '<input id="answer" placeholder="' + t("word") + '">' +
+      '<br><button onclick="checkAnswer()">' + t("check") + '</button>';
+  }
 }
 
 function checkAnswer() {
   const input = document.getElementById('answer');
   const userAns = input.value.trim().toLowerCase();
-  const correctAns = words[i].translation.trim().toLowerCase();
+
+  let correctAns;
+  if (!askReverse) {
+    correctAns = words[i].translation.trim().toLowerCase();
+  } else {
+    correctAns = words[i].word.trim().toLowerCase();
+  }
+
   if (userAns === correctAns) {
     input.classList.remove('wrong');
     input.classList.add('correct');
@@ -73,7 +98,6 @@ function nextWord() {
   showWord();
 }
 
-// ---------- Управление словами ----------
 function openModal() {
   renderWordList();
   document.getElementById('modal').style.display = 'flex';
@@ -110,7 +134,6 @@ function deleteWord(key) {
   db.ref('users/' + uid + '/words/' + key).remove().then(() => renderWordList());
 }
 
-// ---------- Настройки ----------
 function openSettings() {
   document.getElementById('settings-modal').style.display = 'flex';
 }
@@ -121,10 +144,13 @@ function closeSettings() {
 function applySettings() {
   const lvl = getSelectedValue('level-select');
   const typ = getSelectedValue('type-select');
-  if (!lvl || !typ) return;
+  const mode = getSelectedValue('mode-select');
+
+  if (!lvl || !typ || !mode) return;
 
   presetLevel = lvl;
   presetType  = typ;
+  trainingMode = mode;
   usePreset   = true;
 
   if (userWordsRef) userWordsRef.off();
@@ -152,10 +178,15 @@ function loadPresetWords() {
 
   db.ref(`presets/${presetLevel}/${presetType}`).once('value', snap => {
     const data = snap.val();
-    words = data ? Object.values(data) : [];
+    words = data ? shuffle(Object.values(data)) : [];
     i = 0;
     showWord();
   });
+}
+
+function shuffle(array) {
+  for (let j, x, i = array.length; i; j = Math.floor(Math.random() * i), x = array[--i], array[i] = array[j], array[j] = x);
+  return array;
 }
 
 function initCustomSelects() {

@@ -17,7 +17,10 @@ const translations = {
     reset: "Сбросить",
     nouns: "Существительные",
     verbs: "Глаголы",
-    adjectives: "Прилагательные"
+    adjectives: "Прилагательные",
+    mode_ru2lv: "С русского на латышский",
+    mode_lv2ru: "С латышского на русский",
+    mode_both: "Все вместе"
   },
   en: {
     title: "Word Trainer",
@@ -37,7 +40,10 @@ const translations = {
     reset: "Reset",
     nouns: "Nouns",
     verbs: "Verbs",
-    adjectives: "Adjectives"
+    adjectives: "Adjectives",
+    mode_ru2lv: "From Russian to Latvian",
+    mode_lv2ru: "From Latvian to Russian",
+    mode_both: "Mixed"
   },
   lv: {
     title: "Vārdu treniņš",
@@ -57,7 +63,10 @@ const translations = {
     reset: "Atiestatīt",
     nouns: "Lietvārdi",
     verbs: "Darbības vārdi",
-    adjectives: "Īpašības vārdi"
+    adjectives: "Īpašības vārdi",
+    mode_ru2lv: "No krievu uz latviešu",
+    mode_lv2ru: "No latviešu uz krievu",
+    mode_both: "Abi kopā"
   }
 };
 
@@ -95,7 +104,6 @@ function applyTranslations() {
   document.getElementById("apply-btn").innerText = t("apply");
   document.getElementById("reset-btn").innerText = t("reset");
 
-  // опции кастомного селекта
   document.querySelector("#type-select .options [data-value='nouns']").innerText = t("nouns");
   document.querySelector("#type-select .options [data-value='verbs']").innerText = t("verbs");
   document.querySelector("#type-select .options [data-value='adjectives']").innerText = t("adjectives");
@@ -104,5 +112,15 @@ function applyTranslations() {
   if (selectedType) {
     const current = selectedType.getAttribute("data-value");
     if (current) selectedType.innerText = t(current);
+  }
+
+  document.querySelector("#mode-select .options [data-value='ru2lv']").innerText = t("mode_ru2lv");
+  document.querySelector("#mode-select .options [data-value='lv2ru']").innerText = t("mode_lv2ru");
+  document.querySelector("#mode-select .options [data-value='both']").innerText  = t("mode_both");
+
+  const selectedMode = document.querySelector("#mode-select .selected");
+  if (selectedMode) {
+    const current = selectedMode.getAttribute("data-value");
+    if (current) selectedMode.innerText = t("mode_" + current);
   }
 }

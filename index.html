@@ -59,6 +59,16 @@
         </div>
       </div>
 
+      <!-- Режим перевода -->
+      <div class="custom-select" id="mode-select">
+        <div class="selected" data-value="both">Все вместе</div>
+        <div class="options">
+          <div data-value="ru2lv">С русского на латышский</div>
+          <div data-value="lv2ru">С латышского на русский</div>
+          <div data-value="both">Все вместе</div>
+        </div>
+      </div>
+
       <br><br>
       <div class="settings-buttons">
         <button id="apply-btn" onclick="applySettings()"></button>
@@ -67,7 +77,7 @@
     </div>
   </div>
 
-  <footer class="version">v1.2.1</footer>
+  <footer class="version">v1.3.1</footer>
   <button id="lang-btn" class="lang-btn" onclick="toggleLang()">RU</button>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
