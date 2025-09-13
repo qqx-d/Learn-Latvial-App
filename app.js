@@ -46,7 +46,7 @@ function addWord() {
 
 function showWord() {
   if (words.length === 0) {
-    document.getElementById('trainer').innerHTML = t("noWords");
+    document.getElementById("trainer").innerHTML = t("noWords");
     return;
   }
   if (i >= words.length) i = 0;
@@ -59,17 +59,31 @@ function showWord() {
     askReverse = Math.random() < 0.5;
   }
 
-  const wordToShow = !askReverse ? words[i].word : words[i].translation;
-  const placeholder = !askReverse ? t("translation") : t("word");
+  const trainer = document.getElementById("trainer");
+  trainer.innerHTML = "";
 
-  document.getElementById('trainer').innerHTML =
-    `<b>${wordToShow}</b>
-     <input id="answer" placeholder="${placeholder}">
-     <br>
-     <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
-        <button id="check-btn" onclick="checkAnswer()">${t("check")}</button>
-        <button id="skip-btn" onclick="skipWord()">${t("skip")}</button>
-     </div>`;
+  const question = document.createElement("b");
+  question.textContent = askReverse ? words[i].translation : words[i].word;
+  trainer.appendChild(question);
+
+  const input = document.createElement("input");
+  input.id = "answer";
+  input.placeholder = askReverse ? t("word") : t("translation");
+  trainer.appendChild(document.createElement("br"));
+  trainer.appendChild(input);
+
+  const btnCheck = document.createElement("button");
+  btnCheck.id = "check-btn";
+  btnCheck.textContent = t("check");
+  btnCheck.addEventListener("click", checkAnswer);
+  trainer.appendChild(document.createElement("br"));
+  trainer.appendChild(btnCheck);
+
+  const btnSkip = document.createElement("button");
+  btnSkip.id = "skip-btn";
+  btnSkip.textContent = t("skip");
+  btnSkip.addEventListener("click", skipWord);
+  trainer.appendChild(btnSkip);
 }
 
 function skipWord() {
