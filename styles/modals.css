@@ -1,0 +1,44 @@
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background: #fff;
+  color: #000;
+  padding: 20px;
+  border-radius: 10px;
+  width: 95%;
+  max-width: 500px;
+  max-height: 85%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+.close { float: right; font-size: 1.5rem; cursor: pointer; }
+.word-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+.word-item input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: #f5f5f5;
+}
+.word-item button {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}

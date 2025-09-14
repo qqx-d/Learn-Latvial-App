@@ -4,93 +4,126 @@
   <meta charset="UTF-8">
   <title>Тренировка слов</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/buttons.css">
+  <link rel="stylesheet" href="styles/trainer.css">
+  <link rel="stylesheet" href="styles/modals.css">
+  <link rel="stylesheet" href="styles/selects.css">
+  <link rel="stylesheet" href="styles/ui.css">
+  <link rel="stylesheet" href="styles/tabs.css">
 </head>
 <body>
   <h1 id="title"></h1>
 
-  <div id="trainer">Загрузка...</div>
+  <!-- панель вкладок -->
+  <div class="tabs">
+    <button id="tab-trainer" class="tab-btn active" data-tab="trainer-tab">Тренировка</button>
+    <button id="tab-manage" class="tab-btn" data-tab="manage-tab">Слова</button>
+    <button id="tab-settings" class="tab-btn" data-tab="settings-tab">Настройки</button>
+  </div>
 
-  <!-- добавление слова -->
-  <div id="add-card" class="card">
-    <h3 id="add-title"></h3>
-    <div class="inputs">
-      <input id="word" placeholder="">
-      <input id="translation" placeholder="">
-      <button id="add-btn" onclick="addWord()"></button>
+  <!-- вкладка 1: тренировка -->
+  <div id="trainer-tab" class="tab-content active">
+    <div id="trainer"></div>
+
+    <!-- добавление слова -->
+    <div id="add-card" class="card">
+      <h3 id="add-title"></h3>
+      <div class="inputs">
+        <input id="word" placeholder="">
+        <input id="translation" placeholder="">
+        <button id="add-btn" onclick="addWord()"></button>
+      </div>
+    </div>
+
+    <div class="secondary-buttons">
+      <button id="manage-btn" onclick="openModal()"></button>
+      <button id="settings-btn" onclick="openSettings()"></button>
+    </div>
+
+    <!-- управление словами -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3 id="list-title"></h3>
+        <div id="word-list"></div>
+      </div>
+    </div>
+
+    <!-- настройки -->
+    <div id="settings-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeSettings()">&times;</span>
+        <h3 id="settings-title"></h3>
+
+        <!-- Уровень -->
+        <div class="custom-select" id="level-select">
+          <div class="selected" data-value="a1">A1</div>
+          <div class="options">
+            <div data-value="randomAll">Случайные слова</div>
+            <div data-value="a1">A1</div>
+            <div data-value="a2">A2</div>
+            <div data-value="b1">B1</div>
+            <div data-value="b2">B2</div>
+            <div data-value="c1">C1</div>
+          </div>
+        </div>
+
+        <!-- Тип слов -->
+        <div class="custom-select" id="type-select">
+          <div class="selected" data-value="nouns">Существительные</div>
+          <div class="options">
+            <div data-value="nouns">Существительные</div>
+            <div data-value="verbs">Глаголы</div>
+            <div data-value="adjectives">Прилагательные</div>
+          </div>
+        </div>
+
+        <!-- Режим перевода -->
+        <div class="custom-select" id="mode-select">
+          <div class="selected" data-value="both">Все вместе</div>
+          <div class="options">
+            <div data-value="ru2lv">С русского на латышский</div>
+            <div data-value="lv2ru">С латышского на русский</div>
+            <div data-value="both">Все вместе</div>
+          </div>
+        </div>
+
+        <br><br>
+        <div class="settings-buttons">
+          <button id="apply-btn" onclick="applySettings()"></button>
+          <button id="reset-btn" onclick="resetToPersonal()"></button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <button id="manage-btn" onclick="openModal()"></button>
-  <button id="settings-btn" onclick="openSettings()"></button>
-
-  <!-- управление словами -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <h3 id="list-title"></h3>
-      <div id="word-list"></div>
-    </div>
+  <!-- вкладка 2: слова -->
+  <div id="manage-tab" class="tab-content">
+    
   </div>
 
-  <!-- настройки -->
-  <div id="settings-modal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeSettings()">&times;</span>
-      <h3 id="settings-title"></h3>
-
-      <!-- Уровень -->
-      <div class="custom-select" id="level-select">
-        <div class="selected" data-value="a1">A1</div>
-        <div class="options">
-          <div data-value="randomAll">Случайные слова</div>
-          <div data-value="a1">A1</div>
-          <div data-value="a2">A2</div>
-          <div data-value="b1">B1</div>
-          <div data-value="b2">B2</div>
-          <div data-value="c1">C1</div>
-        </div>
-      </div>
-
-      <!-- Тип слов -->
-      <div class="custom-select" id="type-select">
-        <div class="selected" data-value="nouns">Существительные</div>
-        <div class="options">
-          <div data-value="nouns">Существительные</div>
-          <div data-value="verbs">Глаголы</div>
-          <div data-value="adjectives">Прилагательные</div>
-        </div>
-      </div>
-
-      <!-- Режим перевода -->
-      <div class="custom-select" id="mode-select">
-        <div class="selected" data-value="both">Все вместе</div>
-        <div class="options">
-          <div data-value="ru2lv">С русского на латышский</div>
-          <div data-value="lv2ru">С латышского на русский</div>
-          <div data-value="both">Все вместе</div>
-        </div>
-      </div>
-
-      <br><br>
-      <div class="settings-buttons">
-        <button id="apply-btn" onclick="applySettings()"></button>
-        <button id="reset-btn" onclick="resetToPersonal()"></button>
-      </div>
-    </div>
+  <!-- вкладка 3: настройки -->
+  <div id="settings-tab" class="tab-content">
+    
   </div>
 
-  <footer class="version">v1.4.3</footer>
+  <footer class="version">v2.0.0</footer>
   <button id="lang-btn" class="lang-btn" onclick="toggleLang()">RU</button>
 
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+
+  <!-- Scripts -->
   <script>
-      const ts = Date.now();
-      document.write(`<script src="firebase-config.js?v=${ts}"><\/script>`);
-      document.write(`<script src="lang.js?v=${ts}"><\/script>`);
-      document.write(`<script src="app.js?v=${ts}"><\/script>`);
+    const ts = Date.now();
+    document.write(`<script src="firebase-config.js?v=${ts}"><\/script>`);
+    document.write(`<script src="lang.js?v=${ts}"><\/script>`);
+    document.write(`<script src="app.js?v=${ts}"><\/script>`);
+    document.write(`<script src="tabs.js?v=${ts}"><\/script>`);
   </script>
 </body>
 </html>

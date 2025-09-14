@@ -2,7 +2,6 @@ const translations = {
   ru: {
     title: "Тренировка слов",
     addWordTitle: "Добавить слово",
-    word: "Слово",
     translation: "Перевод",
     add: "Добавить",
     manage: "Управлять словами",
@@ -22,12 +21,17 @@ const translations = {
     mode_lv2ru: "С латышского на русский",
     mode_both: "Все вместе",
     randomAll: "Случайные слова",
-    skip: "Пропустить"
+    skip: "Пропустить",
+    trainerTab: "Слова",
+    manageTab: "Склонения",
+    settingsTab: "🔒",
+    noWords: "Нет слов",
+    delete: "Удалить",
   },
   en: {
     title: "Word Trainer",
     addWordTitle: "Add word",
-    word: "Word",
+
     translation: "Translation",
     add: "Add",
     manage: "Manage words",
@@ -47,12 +51,16 @@ const translations = {
     mode_lv2ru: "From Latvian to Russian",
     mode_both: "Mixed",
     randomAll: "Random words",
-    skip: "Skip"
+    skip: "Skip",
+    trainerTab: "Words",
+    manageTab: "Declensions",
+    settingsTab: "🔒",
+    noWords: "No words",
+    delete: "Delete",
   },
   lv: {
     title: "Vārdu treniņš",
     addWordTitle: "Pievienot vārdu",
-    word: "Vārds",
     translation: "Tulkojums",
     add: "Pievienot",
     manage: "Pārvaldīt vārdus",
@@ -72,7 +80,12 @@ const translations = {
     mode_lv2ru: "No latviešu uz krievu",
     mode_both: "Abi kopā",
     randomAll: "Nejauši vārdi",
-    skip: "Izlaist"
+    skip: "Izlaist",
+    trainerTab: "Vārdi",
+    manageTab: "Locījumi",
+    settingsTab: "🔒",
+    noWords: "Nav vārdu",
+    delete: "Dzēst",
   }
 };
 
@@ -91,9 +104,22 @@ function setLang(lang) {
 }
 
 function toggleLang() {
-  const order = ["ru", "en", "lv"];
-  const next = order[(order.indexOf(currentLang) + 1) % order.length];
-  setLang(next);
+  currentLang = currentLang === "ru" ? "en" : currentLang === "en" ? "lv" : "ru";
+  localStorage.setItem("lang", currentLang);
+
+  const langBtn = document.getElementById("lang-btn");
+  if (langBtn) {
+    langBtn.innerText = currentLang.toUpperCase();
+  }
+
+  applyTranslations();
+
+  if (typeof renderWordList === "function") {
+    renderWordList();
+  }
+  if (typeof showWord === "function") {
+    showWord();
+  }
 }
 
 function applyTranslations() {
@@ -113,6 +139,10 @@ function applyTranslations() {
   document.querySelector("#type-select .options [data-value='nouns']").innerText = t("nouns");
   document.querySelector("#type-select .options [data-value='verbs']").innerText = t("verbs");
   document.querySelector("#type-select .options [data-value='adjectives']").innerText = t("adjectives");
+
+  document.getElementById("tab-trainer").innerText = t("trainerTab");
+  document.getElementById("tab-manage").innerText = t("manageTab");
+  document.getElementById("tab-settings").innerText = t("settingsTab");
 
   const selectedType = document.querySelector("#type-select .selected");
   if (selectedType) {
@@ -140,5 +170,10 @@ function applyTranslations() {
     } else {
       selectedLevel.innerText = current.toUpperCase();
     }
+  }
+
+  const langBtn = document.getElementById("lang-btn");
+  if (langBtn) {
+    langBtn.textContent = currentLang.toUpperCase();
   }
 }

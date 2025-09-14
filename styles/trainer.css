@@ -1,0 +1,115 @@
+#trainer input,
+#trainer button,
+.card input,
+.card button {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  padding: clamp(8px, 1.5vh, 12px);
+  border-radius: 6px;
+}
+
+.trainer-actions {
+  display: flex;
+  gap: 0px;
+  width: 100%;
+  gap: 10px;
+}
+
+.trainer-actions button {
+  flex: 1;
+  min-width: 100px;           /* фикс нижней границы */
+  max-width: 160px;           /* фикс верхней границы */
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+#trainer {
+  background: rgba(255,255,255,0.1);
+  padding: clamp(10px, 2vh, 20px);
+  border-radius: 12px;
+  text-align: center;
+  width: clamp(250px, 90%, 380px);
+  max-width: 380px;
+  margin-bottom: clamp(10px, 2vh, 20px);
+}
+
+#trainer b {
+  font-size: clamp(1.5rem, 2.75vw, 1.5rem);
+  display: block;
+}
+
+.card {
+  background: rgba(255,255,255,0.15);
+  padding: clamp(10px, 2vh, 20px);
+  border-radius: 12px;
+  width: clamp(250px, 90%, 380px);
+  max-width: 380px;
+}
+
+#add-title {
+  text-align: center;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 clamp(10px, 2vh, 15px);
+  padding-bottom: clamp(4px, 1vh, 8px);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+  display: inline-block;
+  width: 100%;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.5vh, 10px);
+}
+
+.inputs input {
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+  padding: clamp(6px, 1.5vh, 10px);
+}
+
+.trainer-ui {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(10px, 2vh, 20px);
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+}
+
+.trainer-ui b {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  margin-bottom: clamp(4px, 1vh, 8px);
+}
+
+.trainer-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: clamp(6px, 1.5vh, 10px);
+}
+
+#trainer input.correct {
+  border: 2px solid #4caf50;
+  background-color: #bbfbbd;
+  color: black;
+}
+
+#trainer input.wrong {
+  border: 2px solid #f44336;
+  background-color: #f2b7b3;
+  color: black;
+}
+
+#answer {
+  color: black;
+}
+
+#answer::placeholder {
+  color: rgba(0,0,0,0.6);
+}
