@@ -99,10 +99,10 @@ function checkAnswer() {
   const translation = words[i].translation;
 
   let correctAns;
-  if (currentDirection === "ru2lv") {
-    correctAns = cleanWord(translation);
-  } else {
+  if (askReverse) {
     correctAns = cleanWord(word);
+  } else {
+    correctAns = cleanWord(translation);
   }
 
   if (userAns === correctAns) {
