@@ -80,14 +80,17 @@
     </div>
   </div>
 
-  <footer class="version">v1.4.1</footer>
+  <footer class="version">v1.4.3</footer>
   <button id="lang-btn" class="lang-btn" onclick="toggleLang()">RU</button>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="lang.js"></script>
-  <script src="app.js"></script>
+  <script>
+      const ts = Date.now();
+      document.write(`<script src="firebase-config.js?v=${ts}"><\/script>`);
+      document.write(`<script src="lang.js?v=${ts}"><\/script>`);
+      document.write(`<script src="app.js?v=${ts}"><\/script>`);
+  </script>
 </body>
 </html>
