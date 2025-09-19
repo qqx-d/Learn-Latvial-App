@@ -1,0 +1,30 @@
+.declension-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.declension-actions button {
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.declension-actions button:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.declension-actions button.correct {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.25);
+}
+
+.declension-actions button.wrong {
+  border-color: #f44336;
+  background: rgba(244, 67, 54, 0.25);
+}

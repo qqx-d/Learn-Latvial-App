@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles/selects.css">
   <link rel="stylesheet" href="styles/ui.css">
   <link rel="stylesheet" href="styles/tabs.css">
+  <link rel="stylesheet" href="styles/declension.css">
 </head>
 <body>
   <h1 id="title"></h1>
@@ -101,15 +102,27 @@
 
   <!-- вкладка 2: слова -->
   <div id="manage-tab" class="tab-content">
-    
+    <div id="declension-trainer" class="trainer-ui">
+      <b id="declension-word">Пусто</b>
+      <p id="declension-translation" style="margin: 6px 0; font-size: 0.9rem;"></p>
+      <div class="declension-actions">
+        <button data-choice="1" id="decl-btn-1"></button>
+        <button data-choice="2" id="decl-btn-2"></button>
+        <button data-choice="3" id="decl-btn-3"></button>
+        <button data-choice="4" id="decl-btn-4"></button>
+        <button data-choice="5" id="decl-btn-5"></button>
+        <button data-choice="6" id="decl-btn-6"></button>
+      </div>
+    </div>
   </div>
+
 
   <!-- вкладка 3: настройки -->
   <div id="settings-tab" class="tab-content">
     
   </div>
 
-  <footer class="version">v2.0.0</footer>
+  <footer class="version">v2.1.0</footer>
   <button id="lang-btn" class="lang-btn" onclick="toggleLang()">RU</button>
 
   <!-- Firebase -->
@@ -123,7 +136,8 @@
     document.write(`<script src="firebase-config.js?v=${ts}"><\/script>`);
     document.write(`<script src="lang.js?v=${ts}"><\/script>`);
     document.write(`<script src="app.js?v=${ts}"><\/script>`);
-    document.write(`<script src="tabs.js?v=${ts}"><\/script>`);
+    document.write(`<script src="tabs.js?v=${ts}"><\/script>`)
+    document.write(`<script src="declension.js?v=${ts}"><\/script>`)
   </script>
 </body>
 </html>

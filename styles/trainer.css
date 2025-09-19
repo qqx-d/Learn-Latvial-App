@@ -18,8 +18,8 @@
 
 .trainer-actions button {
   flex: 1;
-  min-width: 100px;           /* фикс нижней границы */
-  max-width: 160px;           /* фикс верхней границы */
+  min-width: 100px;
+  max-width: 160px;
   font-size: clamp(0.8rem, 2.5vw, 1rem);
   white-space: nowrap;
   overflow: hidden;

@@ -27,6 +27,12 @@ const translations = {
     settingsTab: "🔒",
     noWords: "Нет слов",
     delete: "Удалить",
+    decl1: "1 склонение",
+    decl2: "2 склонение",
+    decl3: "3 склонение",
+    decl4: "4 склонение",
+    decl5: "5 склонение",
+    decl6: "6 склонение",
   },
   en: {
     title: "Word Trainer",
@@ -57,6 +63,12 @@ const translations = {
     settingsTab: "🔒",
     noWords: "No words",
     delete: "Delete",
+    decl1: "1st declension",
+    decl2: "2nd declension",
+    decl3: "3rd declension",
+    decl4: "4th declension",
+    decl5: "5th declension",
+    decl6: "6th declension",
   },
   lv: {
     title: "Vārdu treniņš",
@@ -86,6 +98,12 @@ const translations = {
     settingsTab: "🔒",
     noWords: "Nav vārdu",
     delete: "Dzēst",
+    decl1: "1. deklinācija",
+    decl2: "2. deklinācija",
+    decl3: "3. deklinācija",
+    decl4: "4. deklinācija",
+    decl5: "5. deklinācija",
+    decl6: "6. deklinācija",
   }
 };
 
@@ -175,5 +193,10 @@ function applyTranslations() {
   const langBtn = document.getElementById("lang-btn");
   if (langBtn) {
     langBtn.textContent = currentLang.toUpperCase();
+  }
+
+  for (let i = 1; i <= 6; i++) {
+    const btn = document.getElementById("decl-btn-" + i);
+    if (btn) btn.innerText = t("decl" + i);
   }
 }
