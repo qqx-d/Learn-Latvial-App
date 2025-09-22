@@ -1,16 +1,12 @@
 const auth = firebase.auth();
 const db = firebase.database();
 let uid = null;
-let words = [];
-let i = 0;
 
 let presetLevel = null;
 let presetType = null;
 let usePreset = false;
 let userWordsRef = null;
-let trainingMode = "both";
-let currentDirection = "ru2lv";
-let askReverse = false;
+let pendingDuplicate = null;
 
 auth.signInAnonymously().then(() => {
   uid = auth.currentUser.uid;
@@ -23,9 +19,8 @@ function listenWords() {
 
   userWordsRef = db.ref("users/" + uid + "/words");
   userWordsRef.on("value", snapshot => {
-    words = snapshot.val() ? Object.values(snapshot.val()) : [];
-    i = 0;
-    showWord();
+    const words = snapshot.val() ? Object.values(snapshot.val()) : [];
+    Trainer.setWords(words);
   });
 }
 
@@ -36,103 +31,47 @@ function getSelectedValue(id) {
 
 function addWord() {
   if (usePreset) return;
-  const w = document.getElementById("word").value.trim();
-  const t = document.getElementById("translation").value.trim();
+
+  const wordInput = document.getElementById("word");
+  const transInput = document.getElementById("translation");
+
+  const w = wordInput.value.trim();
+  const t = transInput.value.trim();
   if (!w || !t) return;
-  const newRef = db.ref("users/" + uid + "/words").push();
-  newRef.set({ word: w, translation: t });
-  document.getElementById("word").value = "";
-  document.getElementById("translation").value = "";
-}
 
-function showWord() {
-  const trainer = document.getElementById("trainer");
-  trainer.innerHTML = "";
+  const found = Trainer.getWords().find(item =>
+    item.word.toLowerCase() === w.toLowerCase() ||
+    item.translation.toLowerCase() === t.toLowerCase() ||
+    (item.word.toLowerCase() === t.toLowerCase() &&
+    item.translation.toLowerCase() === w.toLowerCase())
+  );
 
-  const uiContainer = document.createElement("div");
-  uiContainer.className = "trainer-ui";
-  trainer.appendChild(uiContainer);
+  if (found) {
+    pendingDuplicate = { w, t };
 
-  if (words.length === 0) {
-    const noWordsMsg = document.createElement("p");
-    noWordsMsg.innerText = t("noWords");
-    uiContainer.appendChild(noWordsMsg);
+    document.getElementById("duplicate-existing").innerText =
+      `${found.word} → ${found.translation}`;
+    document.getElementById("duplicate-new").innerText =
+      `${w} → ${t}`;
+
+    document.getElementById("duplicate-modal").style.display = "flex";
     return;
   }
 
-  if (i >= words.length) i = 0;
-
-  askReverse =
-    trainingMode === "ru2lv"
-      ? false
-      : trainingMode === "lv2ru"
-      ? true
-      : Math.random() < 0.5;
-
-  const question = document.createElement("b");
-  question.textContent = askReverse ? words[i].translation : words[i].word;
-  uiContainer.appendChild(question);
-
-  const input = document.createElement("input");
-  input.id = "answer";
-  input.placeholder = t("translation");
-  uiContainer.appendChild(input);
-
-  const actions = document.createElement("div");
-  actions.className = "trainer-actions";
-
-  const btnCheck = document.createElement("button");
-  btnCheck.id = "check-btn";
-  btnCheck.textContent = t("check");
-  btnCheck.addEventListener("click", checkAnswer);
-
-  const btnSkip = document.createElement("button");
-  btnSkip.id = "skip-btn";
-  btnSkip.textContent = t("skip");
-  btnSkip.addEventListener("click", skipWord);
-
-  actions.appendChild(btnCheck);
-  actions.appendChild(btnSkip);
-  uiContainer.appendChild(actions);
+  saveWord(w, t);
 }
 
-function skipWord() {
-  setTimeout(() => {
-    nextWord();
-  }, 100);
-}
+function saveWord(w, t) {
+  const newRef = db.ref("users/" + uid + "/words").push();
+  newRef.set({ word: w, translation: t });
 
-function checkAnswer() {
-  const input = document.getElementById("answer");
-  const btn = document.getElementById("check-btn");
-  const userAns = cleanWord(input.value);
+  const wordInput = document.getElementById("word");
+  const transInput = document.getElementById("translation");
 
-  const word = words[i].word;
-  const translation = words[i].translation;
-
-  let correctAns = askReverse ? cleanWord(word) : cleanWord(translation);
-
-  if (userAns === correctAns) {
-    input.classList.remove("wrong");
-    input.classList.add("correct");
-    btn.classList.remove("wrong");
-    btn.classList.add("correct");
-
-    btn.disabled = true;
-    setTimeout(() => {
-      nextWord();
-    }, 1000);
-  } else {
-    input.classList.remove("correct");
-    input.classList.add("wrong");
-    btn.classList.remove("correct");
-    btn.classList.add("wrong");
-  }
-}
-
-function nextWord() {
-  i++;
-  showWord();
+  wordInput.value = "";
+  transInput.value = "";
+  wordInput.style.backgroundColor = "";
+  transInput.style.backgroundColor = "";
 }
 
 function openModal() {
@@ -192,7 +131,7 @@ function applySettings() {
 
   presetLevel = lvl;
   presetType = typ;
-  trainingMode = mode;
+  Trainer.setMode(mode);
   usePreset = true;
 
   if (userWordsRef) userWordsRef.off();
@@ -227,16 +166,13 @@ function loadPresetWords() {
           }
         });
       }
-      words = shuffle(all);
-      i = 0;
-      showWord();
+      Trainer.setWords(shuffle(all));
     });
   } else {
     db.ref(`presets/${presetLevel}/${presetType}`).once("value", snap => {
       const data = snap.val();
-      words = data ? shuffle(Object.values(data)) : [];
-      i = 0;
-      showWord();
+      const words = data ? shuffle(Object.values(data)) : [];
+      Trainer.setWords(words);
     });
   }
 }
@@ -289,8 +225,17 @@ function initCustomSelects() {
 document.addEventListener("DOMContentLoaded", () => {
   initCustomSelects();
   applyTranslations();
-});
 
-function cleanWord(word) {
-  return word.replace(/\(.*?\)/g, "").trim().toLowerCase();
-}
+  document.getElementById("dup-yes").addEventListener("click", () => {
+    if (pendingDuplicate) {
+      saveWord(pendingDuplicate.w, pendingDuplicate.t);
+      pendingDuplicate = null;
+    }
+    document.getElementById("duplicate-modal").style.display = "none";
+  });
+
+  document.getElementById("dup-no").addEventListener("click", () => {
+    pendingDuplicate = null;
+    document.getElementById("duplicate-modal").style.display = "none";
+  });
+});

@@ -1,5 +1,6 @@
 const declDb = firebase.database();
 let currentDecl = null;
+let declGroups = {};
 
 function loadRandomDeclension() {
   declDb.ref("declension").once("value", snap => {
@@ -8,21 +9,34 @@ function loadRandomDeclension() {
       showDeclensionWord(null);
       return;
     }
-    
-    let all = [];
+
+    declGroups = {};
     Object.values(data).forEach(levelData => {
-      all = all.concat(Object.values(levelData));
+      Object.values(levelData).forEach(item => {
+        if (!declGroups[item.group]) {
+          declGroups[item.group] = [];
+        }
+        declGroups[item.group].push(item);
+      });
     });
 
-    if (all.length === 0) {
-      showDeclensionWord(null);
-      return;
-    }
-
-    const idx = Math.floor(Math.random() * all.length);
-    currentDecl = all[idx];
-    showDeclensionWord(currentDecl);
+    pickBalancedDeclension();
   });
+}
+
+function pickBalancedDeclension() {
+  const groups = Object.keys(declGroups).filter(g => declGroups[g].length > 0);
+  if (groups.length === 0) {
+    showDeclensionWord(null);
+    return;
+  }
+
+  const randGroup = groups[Math.floor(Math.random() * groups.length)];
+  const words = declGroups[randGroup];
+  const idx = Math.floor(Math.random() * words.length);
+
+  currentDecl = words[idx];
+  showDeclensionWord(currentDecl);
 }
 
 function showDeclensionWord(item) {
@@ -52,12 +66,12 @@ function checkDeclension(choice, btn) {
 
   if (choice === correct) {
     btn.classList.add("correct");
-    setTimeout(() => loadRandomDeclension(), 800);
+    setTimeout(() => pickBalancedDeclension(), 800);
   } else {
     btn.classList.add("wrong");
     const correctBtn = document.querySelector(`.declension-actions button[data-choice='${correct}']`);
     if (correctBtn) correctBtn.classList.add("correct");
-    setTimeout(() => loadRandomDeclension(), 1200);
+    setTimeout(() => pickBalancedDeclension(), 1200);
   }
 }
 

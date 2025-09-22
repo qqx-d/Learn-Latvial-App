@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="styles/ui.css">
   <link rel="stylesheet" href="styles/tabs.css">
   <link rel="stylesheet" href="styles/declension.css">
+  <link rel="stylesheet" href="styles/duplicate.css">
 </head>
 <body>
   <h1 id="title"></h1>
@@ -27,6 +28,22 @@
   <!-- вкладка 1: тренировка -->
   <div id="trainer-tab" class="tab-content active">
     <div id="trainer"></div>
+
+    <!-- окно при дубликате -->
+    <div id="duplicate-modal" class="modal">
+      <div class="modal-content duplicate-box">
+        <h3 id="duplicate-title"></h3>
+        <p id="duplicate-exists-label"></p>
+        <div id="duplicate-existing" class="duplicate-info"></div>
+        <p id="duplicate-new-label"></p>
+        <div id="duplicate-new" class="duplicate-info"></div>
+        <p id="duplicate-confirm"></p>
+        <div class="duplicate-actions">
+          <button id="dup-yes"></button>
+          <button id="dup-no"></button>
+        </div>
+      </div>
+    </div>
 
     <!-- добавление слова -->
     <div id="add-card" class="card">
@@ -122,7 +139,7 @@
     
   </div>
 
-  <footer class="version">v2.1.0</footer>
+  <footer class="version">v2.2.0</footer>
   <button id="lang-btn" class="lang-btn" onclick="toggleLang()">RU</button>
 
   <!-- Firebase -->
@@ -130,14 +147,15 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
 
-  <!-- Scripts -->
   <script>
     const ts = Date.now();
     document.write(`<script src="firebase-config.js?v=${ts}"><\/script>`);
+    document.write(`<script src="translations.js?v=${ts}"><\/script>`);
     document.write(`<script src="lang.js?v=${ts}"><\/script>`);
     document.write(`<script src="app.js?v=${ts}"><\/script>`);
-    document.write(`<script src="tabs.js?v=${ts}"><\/script>`)
-    document.write(`<script src="declension.js?v=${ts}"><\/script>`)
+    document.write(`<script src="tabs.js?v=${ts}"><\/script>`);
+    document.write(`<script src="declension.js?v=${ts}"><\/script>`);
+    document.write(`<script src="trainer.js?v=${ts}"><\/script>`);
   </script>
 </body>
 </html>

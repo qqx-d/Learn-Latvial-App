@@ -1,112 +1,3 @@
-const translations = {
-  ru: {
-    title: "Тренировка слов",
-    addWordTitle: "Добавить слово",
-    translation: "Перевод",
-    add: "Добавить",
-    manage: "Управлять словами",
-    listTitle: "Список слов",
-    delete: "Удалить",
-    check: "Проверить",
-    noWords: "Нет слов. Добавьте новые ниже.",
-    trainer: "Загрузка...",
-    settings: "Настройки",
-    settingsTitle: "Настройки",
-    apply: "Применить",
-    reset: "Сбросить",
-    nouns: "Существительные",
-    verbs: "Глаголы",
-    adjectives: "Прилагательные",
-    mode_ru2lv: "С русского на латышский",
-    mode_lv2ru: "С латышского на русский",
-    mode_both: "Все вместе",
-    randomAll: "Случайные слова",
-    skip: "Пропустить",
-    trainerTab: "Слова",
-    manageTab: "Склонения",
-    settingsTab: "🔒",
-    noWords: "Нет слов",
-    delete: "Удалить",
-    decl1: "1 склонение",
-    decl2: "2 склонение",
-    decl3: "3 склонение",
-    decl4: "4 склонение",
-    decl5: "5 склонение",
-    decl6: "6 склонение",
-  },
-  en: {
-    title: "Word Trainer",
-    addWordTitle: "Add word",
-
-    translation: "Translation",
-    add: "Add",
-    manage: "Manage words",
-    listTitle: "Word list",
-    delete: "Delete",
-    check: "Check",
-    noWords: "No words yet. Add new ones below.",
-    trainer: "Loading...",
-    settings: "Settings",
-    settingsTitle: "Settings",
-    apply: "Apply",
-    reset: "Reset",
-    nouns: "Nouns",
-    verbs: "Verbs",
-    adjectives: "Adjectives",
-    mode_ru2lv: "From Russian to Latvian",
-    mode_lv2ru: "From Latvian to Russian",
-    mode_both: "Mixed",
-    randomAll: "Random words",
-    skip: "Skip",
-    trainerTab: "Words",
-    manageTab: "Declensions",
-    settingsTab: "🔒",
-    noWords: "No words",
-    delete: "Delete",
-    decl1: "1st declension",
-    decl2: "2nd declension",
-    decl3: "3rd declension",
-    decl4: "4th declension",
-    decl5: "5th declension",
-    decl6: "6th declension",
-  },
-  lv: {
-    title: "Vārdu treniņš",
-    addWordTitle: "Pievienot vārdu",
-    translation: "Tulkojums",
-    add: "Pievienot",
-    manage: "Pārvaldīt vārdus",
-    listTitle: "Vārdu saraksts",
-    delete: "Dzēst",
-    check: "Pārbaudīt",
-    noWords: "Nav vārdu. Pievienojiet jaunus zemāk.",
-    trainer: "Ielāde...",
-    settings: "Iestatījumi",
-    settingsTitle: "Iestatījumi",
-    apply: "Apstiprināt",
-    reset: "Atiestatīt",
-    nouns: "Lietvārdi",
-    verbs: "Darbības vārdi",
-    adjectives: "Īpašības vārdi",
-    mode_ru2lv: "No krievu uz latviešu",
-    mode_lv2ru: "No latviešu uz krievu",
-    mode_both: "Abi kopā",
-    randomAll: "Nejauši vārdi",
-    skip: "Izlaist",
-    trainerTab: "Vārdi",
-    manageTab: "Locījumi",
-    settingsTab: "🔒",
-    noWords: "Nav vārdu",
-    delete: "Dzēst",
-    decl1: "1. deklinācija",
-    decl2: "2. deklinācija",
-    decl3: "3. deklinācija",
-    decl4: "4. deklinācija",
-    decl5: "5. deklinācija",
-    decl6: "6. deklinācija",
-  }
-};
-
 let currentLang = localStorage.getItem("lang") || "ru";
 
 function t(key) {
@@ -171,6 +62,24 @@ function applyTranslations() {
   document.querySelector("#mode-select .options [data-value='ru2lv']").innerText = t("mode_ru2lv");
   document.querySelector("#mode-select .options [data-value='lv2ru']").innerText = t("mode_lv2ru");
   document.querySelector("#mode-select .options [data-value='both']").innerText  = t("mode_both");
+
+  const dTitle = document.getElementById("duplicate-title");
+  if (dTitle) dTitle.innerText = t("duplicateTitle");
+
+  const dExists = document.getElementById("duplicate-exists-label");
+  if (dExists) dExists.innerText = t("duplicateExists");
+
+  const dNew = document.getElementById("duplicate-new-label");
+  if (dNew) dNew.innerText = t("duplicateNew");
+
+  const dConfirm = document.getElementById("duplicate-confirm");
+  if (dConfirm) dConfirm.innerText = t("duplicateConfirm");
+
+  const dupYes = document.getElementById("dup-yes");
+  if (dupYes) dupYes.innerText = t("yes");
+
+  const dupNo = document.getElementById("dup-no");
+  if (dupNo) dupNo.innerText = t("no");
 
   const selectedMode = document.querySelector("#mode-select .selected");
   if (selectedMode) {

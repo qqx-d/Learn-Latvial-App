@@ -1,0 +1,39 @@
+.duplicate-box {
+  text-align: center;
+  padding: 20px;
+  border-radius: 12px;
+  background: #fff;
+  color: #333;
+  max-width: 340px;
+  margin: auto;
+}
+
+.duplicate-box h3 {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ff9a9e;
+}
+
+.duplicate-info {
+  border: 2px solid #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ff9a9e;
+  background: rgba(0,0,0,0.05);
+}
+
+.duplicate-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.duplicate-actions button {
+  flex: 1;
+  max-width: 120px;
+}
